@@ -4,7 +4,7 @@ import UserContext from "../Context/UserContext";
 const Dashboard: React.FC = () => {
     const context = useContext(UserContext);
     if (!context) {
-        throw new Error("Dashboard must be used within a UserContext.Provider");
+        throw new Error("User is undefined rn");
     }
     const { user, setUser } = context;
     console.log(user);
