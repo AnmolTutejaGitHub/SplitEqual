@@ -6,7 +6,7 @@ import { FaFacebookF } from "react-icons/fa";
 
 const SideBar: React.FC = () => {
     const tweetMessage: string =
-        "Splitwise makes it easy to split expenses with housemates, trips, groups, friends, and family. Check it out! https://www.splitwise.com";
+        "Splitwise makes it easy to split expenses with housemates, trips, groups, friends, and family. Check it out!";
 
     const handleTweetClick = (): void => {
         const twitterUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(

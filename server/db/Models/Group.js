@@ -1,0 +1,22 @@
+const mongoose = require('mongoose');
+
+const GroupSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        trim: true
+    },
+    members: [String],
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        immutable: true
+    },
+    transactions: [String],
+    createdBy: {
+        type: String // id 
+    }
+})
+
+
+const Group = mongoose.model('Group', GroupSchema);
+module.exports = Group;
