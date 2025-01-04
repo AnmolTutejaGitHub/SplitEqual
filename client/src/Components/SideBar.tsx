@@ -3,8 +3,30 @@ import { FaFlag } from "react-icons/fa";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { FaTwitter } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../Context/UserContext";
+import { IoMdPricetag } from "react-icons/io";
+
+interface Group {
+    name: string,
+    id: string,
+    createdAt?: string
+}
 
 const SideBar: React.FC = () => {
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error("User is undefined rn");
+    }
+    const { user, setUser } = context;
+
+    const [groups, setGroups] = useState<Group[]>([]);
+    const [showAllGroups, setShowAllGroups] = useState<boolean>(false);
+    const groupsToShow = showAllGroups ? groups : groups.slice(0, 3);
+
+    const navigate = useNavigate();
     const tweetMessage: string =
         "Splitwise makes it easy to split expenses with housemates, trips, groups, friends, and family. Check it out!";
 
@@ -14,6 +36,27 @@ const SideBar: React.FC = () => {
         )}`;
         window.open(twitterUrl, "_blank");
     };
+
+    async function getGroups() {
+        try {
+            const response = await axios.post(`http://localhost:8080/getUserGroups`, {
+                username: user
+            })
+            setGroups(response.data as Group[]);
+        } catch (e) { }
+    }
+
+
+    const renderGroups: JSX.Element[] = groupsToShow.map((group) => {
+        return <div className='flex gap-2 items-center'>
+            <IoMdPricetag />
+            <div onClick={() => navigate(`/home/group/${group.id}`)}>{group.name}</div>
+        </div>
+    })
+
+    useEffect(() => {
+        getGroups();
+    }, [])
 
 
     return (<div className='p-4 text-gray-500 text-sm pl-[55%] flex flex-col gap-2'>
@@ -36,7 +79,12 @@ const SideBar: React.FC = () => {
         <div>
             <div className='bg-[#F6F6F6] p-1 flex justify-between text-gray-400 hover:bg-[#EEEEEE]'>
                 <div>Groups</div>
-                <div className='hover:text-[#6ECAB0] cursor-pointer'>+ add</div>
+                <div className='hover:text-[#6ECAB0] cursor-pointer' onClick={() => navigate('/newGroup')}>+ add</div>
+            </div>
+            <div>{renderGroups}</div>
+            <div className='cursor-pointer text-[12px] text-[#1AC29F]'>
+                {groups.length > 4 && showAllGroups && <div onClick={() => setShowAllGroups(false)}>show less</div>}
+                {groups.length > 4 && !showAllGroups && <div onClick={() => setShowAllGroups(true)}>show more</div>}
             </div>
         </div>
 

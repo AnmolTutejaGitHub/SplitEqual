@@ -148,7 +148,33 @@ app.post('/createGroup', async (req, res) => {
         console.log(e);
         res.status(400).send(e);
     }
+})
 
+app.post('/getUserGroups', async (req, res) => {
+    try {
+        const { username } = req.body;
+        const user = await User.findOne({ name: username });
+        const response = [];
+
+        for (let i = 0; i < user.groups.length; i++) {
+            const group = await Group.findById(user.groups[i]);
+            response.push({ id: group._id, name: group.name, createdAt: group.createdAt });
+        }
+        response.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        res.status(200).send(response);
+    } catch (e) {
+        response.status(400).send(e);
+    }
+})
+
+app.post('/getgroupData', async (req, res) => {
+    const { groupid } = req.body;
+    try {
+        const group = await Group.findById(groupid);
+        res.status(200).send(group);
+    } catch (e) {
+        res.status(400).send(e);
+    }
 })
 
 
