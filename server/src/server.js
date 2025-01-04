@@ -5,6 +5,7 @@ require('../db/mongoose');
 const app = express();
 const User = require('../db/Models/User');
 const jwt = require('jsonwebtoken');
+const Group = require('../db/Models/Group');
 
 const PORT = process.env.PORT || 8080;
 
@@ -113,6 +114,41 @@ app.post('/getUser', async (req, res) => {
     const user = await User.findOne({ name: username });
     if (user) return res.status(200).send(user);
     res.status(400).send("User does not exist in database");
+})
+
+
+app.post('/createGroup', async (req, res) => {
+    try {
+        const { admin, persons, groupName } = req.body;
+
+        const creator = await User.findOne({ name: admin });
+
+        const group = new Group({
+            name: groupName,
+            createdBy: creator.email,
+            members: [creator.email]
+        })
+        await group.save();
+
+        for (const person of persons) {
+            const user = await User.findOne({ email: person.email });
+            if (user) {
+                if (!group.members.includes(person.email)) {
+                    group.members.push(person.email);
+                    user.groups.push(group._id);
+                    await user.save();
+                }
+            }
+        }
+        creator.groups.push(group._id);
+        await creator.save();
+        await group.save();
+        res.status(200).send(group);
+    } catch (e) {
+        console.log(e);
+        res.status(400).send(e);
+    }
+
 })
 
 

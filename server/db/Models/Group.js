@@ -5,7 +5,7 @@ const GroupSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    members: [String],
+    members: [String], // email
     createdAt: {
         type: Date,
         default: Date.now,
@@ -13,7 +13,7 @@ const GroupSchema = new mongoose.Schema({
     },
     transactions: [String],
     createdBy: {
-        type: String // id 
+        type: String // email
     }
 })
 

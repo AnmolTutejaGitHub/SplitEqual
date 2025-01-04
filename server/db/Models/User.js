@@ -45,7 +45,8 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
         immutable: true
-    }
+    },
+    groups: [String] // id
 })
 
 UserSchema.pre('save', async function (next) {
