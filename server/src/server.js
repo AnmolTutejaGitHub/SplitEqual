@@ -7,7 +7,6 @@ const User = require('../db/Models/User');
 const jwt = require('jsonwebtoken');
 const Group = require('../db/Models/Group');
 const Transaction = require('../db/Models/Transaction');
-const Balance = require('../db/Models/Balance');
 
 const PORT = process.env.PORT || 8080;
 
@@ -197,24 +196,6 @@ app.post('/addExpense', async (req, res) => {
     await transaction.save();
     group.transactions.push(transaction._id);
     await group.save();
-
-    for (let i = 0; i < group.members.length; i++) {
-        if (group.members[i] === user.email) continue;
-        const balance = await Balance.findOne({ groupid: groupid, ownBy: user.email, OwnTo: group.members[i] });
-        if (balance) {
-            balance.amount += amount / group.members.length;
-            await balance.save();
-        }
-        else {
-            const newbalance = new Balance({
-                groupid: groupid,
-                ownBy: user.email,
-                ownTo: group.members[i],
-                amount: amount / group.members.length
-            })
-            await newbalance.save();
-        }
-    }
     res.status(200).send(transaction);
 })
 
