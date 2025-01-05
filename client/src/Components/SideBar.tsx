@@ -52,8 +52,8 @@ const SideBar: React.FC = () => {
     }
 
 
-    const renderGroups: JSX.Element[] = groupsToShow.map((group) => {
-        return <div className={`flex gap-2 items-center ${groupId == group.id ? 'font-bold text-[#5AC5A6] border-l-4 border-[#5AC5A6] pl-1' : ''}`}>
+    const renderGroups: JSX.Element[] = groupsToShow.map((group, index) => {
+        return <div className={`flex gap-2 items-center ${groupId == group.id ? 'font-bold text-[#5AC5A6] border-l-4 border-[#5AC5A6] pl-1' : ''}`} key={index}>
             <IoMdPricetag />
             <div onClick={() => navigate(`/home/group/${group.id}`)} >{group.name}</div>
         </div>

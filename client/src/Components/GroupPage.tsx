@@ -35,7 +35,7 @@ const GroupPage: React.FC = () => {
         const response = await axios.post(`http://localhost:8080/getgroupData`, {
             groupid: groupid
         })
-        console.log(response.data);
+        //console.log(response.data);
         const data = response.data;
         const gpdata: GroupData = {
             name: data.name,
@@ -77,8 +77,8 @@ const GroupPage: React.FC = () => {
         return date.toLocaleDateString('en-US', options);
     }
 
-    const renderExpenses = transactions.map((t) => {
-        return <div className="flex gap-2 items-center border-b-1 border-t-1 border-[#F8F8F8] p-2 shadow-sm">
+    const renderExpenses = transactions.map((t, index) => {
+        return <div className="flex gap-2 items-center border-b-1 border-t-1 border-[#F8F8F8] p-2 shadow-sm" key={index}>
             <div className="w-[90px]">{formatDate(t.paidOn)}</div>
             <img src={Bill} className="w-12"></img>
             <p className="w-32">{t.paidFor}</p>
@@ -89,6 +89,14 @@ const GroupPage: React.FC = () => {
 
         </div>
     })
+
+    function calculateTotalExpense(): string {
+        let sum: number = 0;
+        transactions.forEach((t) => {
+            sum += t.amount;
+        })
+        return sum.toFixed(2);
+    }
 
 
     return (<div>
@@ -111,7 +119,8 @@ const GroupPage: React.FC = () => {
             </div>
         </div>
 
-        <div className="flex flex-col mt-8 ">{renderExpenses}</div>
+        <div className="flex flex-col mt-8">{renderExpenses}</div>
+        <div className="p-2 text-[#1AC29F] text-md">Total Group Expense <span className="font-bold">${calculateTotalExpense()}</span> </div>
     </div>)
 }
 export default GroupPage;

@@ -225,6 +225,32 @@ app.post('/getGroupExpenseHistory', async (req, res) => {
     res.status(200).send(transactions);
 })
 
+app.post('/IndividualGroupExpense', async (req, res) => {
+    const { groupid } = req.body;
+    const group = await Group.findById(groupid);
+    const transactions = await Transaction.find({ groupid: groupid });
+
+    const members = group.members;
+
+    const mapping = [];
+    for (let i = 0; i < members.length; i++) {
+        mapping.push({ "name": members[i], "amount": 0 });
+    }
+
+    for (let i = 0; i < transactions.length; i++) {
+        const transaction = transactions[i];
+        const paidBy = transaction.paidBy;
+        const amount = transaction.amount;
+
+        const memberIndex = mapping.findIndex((m) => m.name === paidBy);
+        if (memberIndex !== -1) {
+            mapping[memberIndex].amount += amount;
+        }
+    }
+
+    res.status(200).send(mapping);
+})
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
