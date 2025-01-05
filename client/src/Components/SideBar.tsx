@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../Context/UserContext";
 import { IoMdPricetag } from "react-icons/io";
+import { useLocation } from 'react-router-dom';
 
 interface Group {
     name: string,
@@ -25,6 +26,10 @@ const SideBar: React.FC = () => {
     const [groups, setGroups] = useState<Group[]>([]);
     const [showAllGroups, setShowAllGroups] = useState<boolean>(false);
     const groupsToShow = showAllGroups ? groups : groups.slice(0, 3);
+
+    const location = useLocation();
+    const split = location.pathname.split('/');
+    const groupId = split[split.length - 1];
 
     const navigate = useNavigate();
     const tweetMessage: string =
@@ -48,9 +53,9 @@ const SideBar: React.FC = () => {
 
 
     const renderGroups: JSX.Element[] = groupsToShow.map((group) => {
-        return <div className='flex gap-2 items-center'>
+        return <div className={`flex gap-2 items-center ${groupId == group.id ? 'font-bold text-[#5AC5A6] border-l-4 border-[#5AC5A6] pl-1' : ''}`}>
             <IoMdPricetag />
-            <div onClick={() => navigate(`/home/group/${group.id}`)}>{group.name}</div>
+            <div onClick={() => navigate(`/home/group/${group.id}`)} >{group.name}</div>
         </div>
     })
 

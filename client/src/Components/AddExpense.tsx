@@ -37,26 +37,29 @@ const AddExpense: React.FC<AddExpenseProp> = ({ groupData, closeExpensePopup }) 
     async function sendDataToDatabase() {
         const toastId = toast.loading('Adding...');
         try {
-            if (!description.trim()) return toast.error('Description is required');
-            if (amount == 0) return toast.error(`can't have $0 as expense`);
+            if (!description.trim()) {
+                toast.dismiss(toastId);
+                return toast.error('Description is required');
+            }
+            if (amount == 0) {
+                toast.dismiss(toastId);
+                return toast.error(`can't have $0 as expense`);
+            }
 
             const response = await axios.post(`http://localhost:8080/addExpense`, {
                 groupid: groupData._id,
                 amount: amount,
                 paidBy: user,
                 description: description,
-                paidOn: selectedDate
-            })
-
+                paidOn: selectedDate,
+            });
             toast.success('Success');
-
         } catch (e) {
-            toast.error("Some Error Occurred");
-            console.log(e);
+            toast.error('Some Error Occurred');
+            console.error(e);
         } finally {
             toast.dismiss(toastId);
         }
-
     }
 
 

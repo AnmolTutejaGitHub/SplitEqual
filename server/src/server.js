@@ -183,11 +183,12 @@ app.post('/addExpense', async (req, res) => {
     const { groupid, amount, paidBy, description, paidOn } = req.body;
 
     const group = await Group.findById(groupid);
+    const user = await User.findOne({ name: paidBy });
 
     const transaction = new Transaction({
         groupid: groupid,
         amount: amount,
-        paidBy: paidBy,
+        paidBy: user.email,
         paidFor: description,
         paidOn: paidOn,
         perPerson: amount / group.members.length
@@ -198,8 +199,8 @@ app.post('/addExpense', async (req, res) => {
     await group.save();
 
     for (let i = 0; i < group.members.length; i++) {
-        if (group.members[i] === paidBy) return;
-        const balance = await Balance.findOne({ groupid: groupid, ownBy: paidBy, OwnTo: group.members[i] });
+        if (group.members[i] === user.email) continue;
+        const balance = await Balance.findOne({ groupid: groupid, ownBy: user.email, OwnTo: group.members[i] });
         if (balance) {
             balance.amount += amount / group.members.length;
             await balance.save();
@@ -207,7 +208,7 @@ app.post('/addExpense', async (req, res) => {
         else {
             const newbalance = new Balance({
                 groupid: groupid,
-                ownBy: paidBy,
+                ownBy: user.email,
                 ownTo: group.members[i],
                 amount: amount / group.members.length
             })
@@ -215,6 +216,13 @@ app.post('/addExpense', async (req, res) => {
         }
     }
     res.status(200).send(transaction);
+})
+
+
+app.post('/getGroupExpenseHistory', async (req, res) => {
+    const { groupid } = req.body;
+    const transactions = await Transaction.find({ groupid: groupid }).sort({ paidOn: -1 })
+    res.status(200).send(transactions);
 })
 
 

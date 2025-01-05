@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
-const TransactionSchema = new mongoose.Scema({
+const TransactionSchema = new mongoose.Schema({
     groupid: {
-        type: string
+        type: String
     },
     amount: {
         type: Number,
         default: 0
     },
     paidBy: {
-        type: String // id
+        type: String // emailid
     },
     paidFor: {
         type: String
