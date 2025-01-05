@@ -8,11 +8,18 @@ const TransactionSchema = new mongoose.Scema({
         type: Number,
         default: 0
     },
-    sender: {
+    paidBy: {
         type: String // id
     },
     paidFor: {
         type: String
+    },
+    paidOn: {
+        type: Date
+    },
+    perPerson: {
+        type: Number,
+        default: 0
     }
 })
 

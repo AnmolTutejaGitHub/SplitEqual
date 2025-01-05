@@ -6,6 +6,8 @@ const app = express();
 const User = require('../db/Models/User');
 const jwt = require('jsonwebtoken');
 const Group = require('../db/Models/Group');
+const Transaction = require('../db/Models/Transaction');
+const Balance = require('../db/Models/Balance');
 
 const PORT = process.env.PORT || 8080;
 
@@ -175,6 +177,44 @@ app.post('/getgroupData', async (req, res) => {
     } catch (e) {
         res.status(400).send(e);
     }
+})
+
+app.post('/addExpense', async (req, res) => {
+    const { groupid, amount, paidBy, description, paidOn } = req.body;
+
+    const group = await Group.findById(groupid);
+
+    const transaction = new Transaction({
+        groupid: groupid,
+        amount: amount,
+        paidBy: paidBy,
+        paidFor: description,
+        paidOn: paidOn,
+        perPerson: amount / group.members.length
+    })
+
+    await transaction.save();
+    group.transactions.push(transaction._id);
+    await group.save();
+
+    for (let i = 0; i < group.members.length; i++) {
+        if (group.members[i] === paidBy) return;
+        const balance = await Balance.findOne({ groupid: groupid, ownBy: paidBy, OwnTo: group.members[i] });
+        if (balance) {
+            balance.amount += amount / group.members.length;
+            await balance.save();
+        }
+        else {
+            const newbalance = new Balance({
+                groupid: groupid,
+                ownBy: paidBy,
+                ownTo: group.members[i],
+                amount: amount / group.members.length
+            })
+            await newbalance.save();
+        }
+    }
+    res.status(200).send(transaction);
 })
 
 

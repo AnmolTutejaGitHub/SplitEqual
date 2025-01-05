@@ -39,11 +39,15 @@ const GroupPage: React.FC = () => {
         getGroupData();
     }, [groupid])
 
+    function closeExpensePopup() {
+        setShowExpensePage(false);
+    }
+
 
     return (<div>
 
         {showExpensePage && <div className="fixed h-[100vh] w-[100vw] bg-black bg-opacity-50 top-0 left-0 flex justify-center ">
-            <AddExpense groupData={groupData as GroupData} />
+            <AddExpense groupData={groupData as GroupData} closeExpensePopup={closeExpensePopup} />
         </div>}
 
 
