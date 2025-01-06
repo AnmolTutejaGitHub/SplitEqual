@@ -14,7 +14,7 @@ interface ProviderProps {
 
 function Provider({ children }: ProviderProps) {
     const [user, setUser] = useState<string>(() => {
-        return sessionStorage.getItem('user') || 'Anmol';
+        return sessionStorage.getItem('user') || 'Anmol Tuteja';
     });
 
     const [loading, setloading] = useState<boolean>(true);

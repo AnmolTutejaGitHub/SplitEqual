@@ -71,7 +71,7 @@ const SideBar: React.FC = () => {
         </div>
 
 
-        <div className='flex gap-1 items-center hover:bg-[#EEEEEE] p-1'>
+        <div className={`flex gap-1 items-center hover:bg-[#EEEEEE] p-1 ${location.pathname.includes('notifications') ? 'font-bold text-[#5AC5A6] border-l-4 border-[#5AC5A6] pl-1' : ''}`} onClick={() => navigate('/home/notifications')}>
             <FaFlag />
             <div>Recent Activity</div>
         </div>

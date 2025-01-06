@@ -7,6 +7,7 @@ const User = require('../db/Models/User');
 const jwt = require('jsonwebtoken');
 const Group = require('../db/Models/Group');
 const Transaction = require('../db/Models/Transaction');
+const Notification = require('../db/Models/Notification');
 
 const PORT = process.env.PORT || 8080;
 
@@ -139,11 +140,17 @@ app.post('/createGroup', async (req, res) => {
                     user.groups.push(group._id);
                     await user.save();
                 }
+                const notification = new Notification({ to: user._id, text: `${creator.email} added you to group ${groupName}` });
+                await notification.save();
             }
         }
         creator.groups.push(group._id);
         await creator.save();
         await group.save();
+
+        const notification = new Notification({ to: creator._id, text: `You created group ${groupName}` });
+        await notification.save();
+
         res.status(200).send(group);
     } catch (e) {
         console.log(e);
@@ -196,6 +203,18 @@ app.post('/addExpense', async (req, res) => {
     await transaction.save();
     group.transactions.push(transaction._id);
     await group.save();
+
+    for (let i = 0; i < group.members.length; i++) {
+        const usr = await User.findOne({ email: group.members[i] });
+        if (usr.email != user.email) {
+            const notification = new Notification({ to: usr._id, text: `${user.email} added ${description} amounting $ ${amount} in ${group.name}` });
+            await notification.save();
+        }
+    }
+
+    const notification = new Notification({ to: user._id, text: `You added ${description} amounting $ ${amount} in ${group.name}` });
+    await notification.save();
+
     res.status(200).send(transaction);
 })
 
@@ -230,6 +249,14 @@ app.post('/IndividualGroupExpense', async (req, res) => {
     }
 
     res.status(200).send(mapping);
+})
+
+
+app.post('/getNotifications', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    const notifications = await Notification.find({ to: user._id }).sort({ timestamp: -1 });
+    res.status(200).send(notifications);
 })
 
 
