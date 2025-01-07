@@ -36,7 +36,7 @@ const GroupPage: React.FC = () => {
             groupid: groupid
         })
         //console.log(response.data);
-        const data = response.data;
+        const data: any = response.data;
         const gpdata: GroupData = {
             name: data.name,
             _id: data._id,
@@ -62,7 +62,7 @@ const GroupPage: React.FC = () => {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/getGroupExpenseHistory`, {
             groupid: groupid
         });
-        const data = response.data;
+        const data: any = response.data;
         const expenses: Expense[] = data;
         setTractions(expenses);
     }

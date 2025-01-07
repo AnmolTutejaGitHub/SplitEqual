@@ -81,7 +81,7 @@ const NewGroup: React.FC = () => {
                 notifyErr('Group Name not entered');
                 return;
             }
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/createGroup`, {
+            const response = await axios.post<GroupDetails>(`${import.meta.env.VITE_API_URL}/createGroup`, {
                 admin: user,
                 groupName: groupName,
                 persons: persons

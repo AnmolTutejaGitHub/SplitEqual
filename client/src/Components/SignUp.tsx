@@ -14,14 +14,14 @@ function Signup() {
     async function SignUp() {
         const toastid = toast.loading('singing up');
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/signups`, {
+            const response = await axios.post<{ token: string }>(`${import.meta.env.VITE_API_URL}/signups`, {
                 email: EnteredEmail,
                 password: EnteredPassword,
                 name: EnteredUser
             });
 
             if (response.status === 200) {
-                const token = response.data.token;
+                const token: string = response.data.token;
                 localStorage.setItem('token', token);
 
                 toast.success('success');
@@ -31,7 +31,7 @@ function Signup() {
                 }, 2000);
 
             }
-        } catch (error) {
+        } catch (error: unknown) {
             if (error instanceof AxiosError) {
                 toast.error(error.response?.data?.error || "Some error Occurred");
             } else {

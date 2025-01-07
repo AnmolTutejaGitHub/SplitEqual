@@ -21,11 +21,12 @@ const Expense: React.FC = () => {
     const [expenses, setExpenses] = useState<expense[]>([]);
 
     async function getExpenses() {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getExpense`, {
+        const response = await axios.post<expense[]>(`${import.meta.env.VITE_API_URL}/getExpense`, {
             username: user
         })
 
         const data: expense[] = response.data;
+        console.log(data);
         setExpenses(data);
     }
 

@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 function ForgetPassword() {
     const [enteredOTP, setEnteredOTP] = useState('');
     const [generatedotp, setgeneratedotp] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -26,7 +25,6 @@ function ForgetPassword() {
         const toastid = toast.loading('sending');
         try {
             await axios.post(`$${import.meta.env.VITE_API_URL}/otp`, { email, otp: newOTP });
-            setError("");
             setgeneratedotp(newOTP);
             toast.success("Otp sent Successfully!");
         } catch (e) {
@@ -38,7 +36,6 @@ function ForgetPassword() {
 
     async function reset(e: React.FormEvent) {
         e.preventDefault();
-        setError('');
         const toastid = toast.loading("Resetting");
 
         if (!email.trim()) {
@@ -76,7 +73,7 @@ function ForgetPassword() {
             toast.success('Password reset successful');
             setPassword('');
             setTimeout(() => navigate('/login'), 2000);
-        } catch (error) {
+        } catch (error: unknown) {
             console.log(error);
 
             if (error instanceof AxiosError) {
@@ -107,7 +104,6 @@ function ForgetPassword() {
                     <input placeholder="Enter OTP" className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#5BC4A6] placeholder:text-[#71767A]' onChange={(e) => setEnteredOTP(e.target.value)}></input>
                     <input placeholder="Enter New Password" className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#5BC4A6] placeholder:text-[#71767A]' onChange={(e) => setPassword(e.target.value)} ></input>
                     <button type="submit" className='bg-[#5BC4A6] rounded-sm p-2 text-white' onClick={(e) => reset(e)}>Reset</button>
-                    {error && <p className="text-red-600">*{error}</p>}
                 </form>
             </div>
         </div>

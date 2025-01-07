@@ -43,7 +43,7 @@ function Login() {
                 navigate('/OTPValidation', { state: { email: EnteredEmail } });
                 toast.success('Login Successfull');
             }
-        } catch (error) {
+        } catch (error: unknown) {
             if (error instanceof AxiosError) {
                 toast.error(error.response?.data?.error || "Some error Occurred");
             } else {

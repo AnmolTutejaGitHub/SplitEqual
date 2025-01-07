@@ -23,9 +23,15 @@ const DashBoard: React.FC = () => {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/getUserData`, {
             username: user
         })
-        const data: User = response.data;
-        console.log(data);
-        setUserData(data);
+        const data: any = response.data;
+        const TypeData: User = {
+            username: data.username,
+            groups: data.groups,
+            JoinedDate: data.JoinedDate,
+            email: data.email
+        }
+        // console.log(data);
+        setUserData(TypeData);
     }
 
     useEffect(() => {

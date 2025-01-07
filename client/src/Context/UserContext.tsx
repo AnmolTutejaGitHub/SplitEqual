@@ -12,6 +12,10 @@ interface ProviderProps {
     children: ReactNode;
 }
 
+interface VerifyTokenResponse {
+    user: string;
+}
+
 function Provider({ children }: ProviderProps) {
     const [user, setUser] = useState<string | null>(() => {
         return sessionStorage.getItem('user') || null;
@@ -23,7 +27,7 @@ function Provider({ children }: ProviderProps) {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const response = await axios.post(`${import.meta.env.VITE_API_URL}/verifytokenAndGetUsername`, {
+                const response = await axios.post<VerifyTokenResponse>(`${import.meta.env.VITE_API_URL}/verifytokenAndGetUsername`, {
                     token: token
                 });
                 if (response.status === 200) setUser(response.data.user);

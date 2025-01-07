@@ -18,7 +18,7 @@ const Notification: React.FC = () => {
     const { user } = context;
 
     async function getNotifications() {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getNotifications`, {
+        const response = await axios.post<notification[]>(`${import.meta.env.VITE_API_URL}/getNotifications`, {
             username: user
         })
 

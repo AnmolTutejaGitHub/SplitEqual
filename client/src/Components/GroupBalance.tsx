@@ -30,7 +30,7 @@ const GroupBalance: React.FC = () => {
     const [groupData, setGroupData] = useState<GroupData | null>(null);
 
     async function getIndividualExpense(): Promise<void> {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/IndividualGroupExpense`, {
+        const response = await axios.post<OwnerExpense[]>(`${import.meta.env.VITE_API_URL}/IndividualGroupExpense`, {
             groupid: groupid
         })
         const data: OwnerExpense[] = response.data;
@@ -62,7 +62,7 @@ const GroupBalance: React.FC = () => {
             groupid: groupid
         })
         //console.log(response.data);
-        const data = response.data;
+        const data: any = response.data;
         const gpdata: GroupData = {
             name: data.name,
             _id: data._id,
