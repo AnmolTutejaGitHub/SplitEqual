@@ -72,6 +72,7 @@ const GroupBalance: React.FC = () => {
             transactions: data.transactions
         }
         setGroupData(gpdata);
+        console.log(groupData);
     }
 
     const renderDebts = debts.map((debt, index) => (

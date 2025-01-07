@@ -1,22 +1,21 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import UserContext from "../Context/UserContext";
 import { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 function Login() {
     const [EnteredUser, setEnteredUser] = useState<string>('');
     const [EnteredEmail, setEnteredEmail] = useState('');
     const [EnteredPassword, setEnteredPassword] = useState('');
-    const [error, setError] = useState('');
 
     const context = useContext(UserContext);
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { setUser } = context;
 
     const navigate = useNavigate();
     const [loginLoader, setLoginLoader] = useState(false);
@@ -73,7 +72,6 @@ function Login() {
                             aria-label="Loading Spinner"
                             data-testid="loader"
                         /> : 'login'}</button>
-                    {error && <p className='text-red-600'>*{error}</p>}
                 </form>
             </div>
         </div>);

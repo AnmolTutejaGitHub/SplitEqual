@@ -9,7 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import UserContext from "../Context/UserContext";
 import { IoMdPricetag } from "react-icons/io";
 import { useLocation } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 interface Group {
     name: string,
@@ -22,7 +22,7 @@ const SideBar: React.FC = () => {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
 
     const [groups, setGroups] = useState<Group[]>([]);
     const [showAllGroups, setShowAllGroups] = useState<boolean>(false);
@@ -79,7 +79,7 @@ const SideBar: React.FC = () => {
                 toast.dismiss(toastId);
                 return;
             }
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/invite`, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/invite`, {
                 username: user,
                 email: email
             })

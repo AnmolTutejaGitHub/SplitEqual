@@ -11,7 +11,7 @@ const Dashboard: React.FC = () => {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
     console.log(user);
 
     return (<div>

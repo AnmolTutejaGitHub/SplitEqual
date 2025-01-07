@@ -3,7 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import axios from 'axios';
 import UserContext from "../Context/UserContext";
 import { useContext } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 interface GroupData {
     _id: string,
@@ -24,7 +24,7 @@ const AddExpense: React.FC<AddExpenseProp> = ({ groupData, closeExpensePopup }) 
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
 
     const [amount, setAmount] = useState<number>(0);
     const today = new Date().toISOString().split("T")[0];
@@ -46,7 +46,7 @@ const AddExpense: React.FC<AddExpenseProp> = ({ groupData, closeExpensePopup }) 
                 return toast.error(`can't have $0 as expense`);
             }
 
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/addExpense`, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/addExpense`, {
                 groupid: groupData._id,
                 amount: amount,
                 paidBy: user,

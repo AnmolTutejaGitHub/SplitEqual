@@ -15,7 +15,7 @@ const Expense: React.FC = () => {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
     console.log(user);
 
     const [expenses, setExpenses] = useState<expense[]>([]);

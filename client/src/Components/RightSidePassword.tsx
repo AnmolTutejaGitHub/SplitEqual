@@ -1,15 +1,15 @@
 import { useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useContext } from "react";
 import UserContext from "../Context/UserContext";
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const RightSidePassword: React.FC = () => {
     const context = useContext(UserContext);
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
 
     const [currPassword, setCurrPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");

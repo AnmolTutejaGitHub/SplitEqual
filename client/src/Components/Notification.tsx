@@ -15,7 +15,7 @@ const Notification: React.FC = () => {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
 
     async function getNotifications() {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/getNotifications`, {

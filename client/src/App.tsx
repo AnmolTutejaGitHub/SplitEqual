@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./Components/Landing";
 import Home from "./Components/Home";
 import NewGroup from "./Components/NewGroup";
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Login from "./Components/Login";
 import Signup from "./Components/SignUp";
 import OTPValidation from "./Components/OTPValidation";

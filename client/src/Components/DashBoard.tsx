@@ -17,7 +17,7 @@ const DashBoard: React.FC = () => {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
 
     async function getData() {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/getUserData`, {

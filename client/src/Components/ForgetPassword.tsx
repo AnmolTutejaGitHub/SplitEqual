@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 function ForgetPassword() {
     const [enteredOTP, setEnteredOTP] = useState('');
@@ -68,7 +68,7 @@ function ForgetPassword() {
         }
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/resetpassword`, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/resetpassword`, {
                 email,
                 password
             });

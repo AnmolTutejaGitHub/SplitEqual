@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import Logo from '../assets/Logo-removebg-preview.png';
 
 function Signup() {
     const [EnteredUser, setEnteredUser] = useState('');
     const [EnteredEmail, setEnteredEmail] = useState('');
     const [EnteredPassword, setEnteredPassword] = useState('');
-    const [Error, setError] = useState('');
     const navigate = useNavigate();
 
     async function SignUp() {
@@ -56,7 +55,6 @@ function Signup() {
                     <input placeholder="Set Password" onChange={(e) => { setEnteredPassword(e.target.value) }} className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#5BC4A6] placeholder:text-[#71767A]' required></input>
                     <p>Already have an Account ? <span><Link to="/login" className='text-[#5BC4A6]'>Login</Link></span></p>
                     <button className='bg-[#5BC4A6] rounded-sm p-2 text-white' type="submit">Sign Up</button>
-                    {Error && <p className='text-red-600'>*{Error}</p>}
                 </form>
             </div>
         </div>

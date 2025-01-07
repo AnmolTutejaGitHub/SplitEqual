@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import UserContext from "../Context/UserContext";
 import Logo from '../assets/Logo-removebg-preview.png';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import axios from 'axios';
 
 interface Person {
@@ -22,7 +22,7 @@ const NewGroup: React.FC = () => {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { user, setUser } = context;
+    const { user } = context;
     //console.log(user);
 
     const [persons, setPersons] = useState<Person[]>([]);
