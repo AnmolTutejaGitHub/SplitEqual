@@ -31,7 +31,7 @@ function Signup() {
                 }, 2000);
 
             }
-        } catch (error: unknown) {
+        } catch (error: any) {
             if (error instanceof AxiosError) {
                 toast.error(error.response?.data?.error || "Some error Occurred");
             } else {

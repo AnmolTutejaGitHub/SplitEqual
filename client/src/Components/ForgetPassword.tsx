@@ -73,7 +73,7 @@ function ForgetPassword() {
             toast.success('Password reset successful');
             setPassword('');
             setTimeout(() => navigate('/login'), 2000);
-        } catch (error: unknown) {
+        } catch (error: any) {
             console.log(error);
 
             if (error instanceof AxiosError) {

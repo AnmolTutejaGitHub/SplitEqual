@@ -28,7 +28,7 @@ function Login() {
         const toastId = toast.loading('logging..');
         try {
             setLoginLoader(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+            const response = await axios.post<{ token: string }>(`${import.meta.env.VITE_API_URL}/login`, {
                 name: EnteredUser,
                 email: EnteredEmail,
                 password: EnteredPassword,
@@ -43,7 +43,7 @@ function Login() {
                 navigate('/OTPValidation', { state: { email: EnteredEmail } });
                 toast.success('Login Successfull');
             }
-        } catch (error: unknown) {
+        } catch (error: any) {
             if (error instanceof AxiosError) {
                 toast.error(error.response?.data?.error || "Some error Occurred");
             } else {
