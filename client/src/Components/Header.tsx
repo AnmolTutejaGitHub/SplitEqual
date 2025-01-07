@@ -1,12 +1,22 @@
 import Logo from '../assets/Splitwise_logo.png';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserContext from "../Context/UserContext";
 import Avtar from '../assets/avatar-blue10-100px.png';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
+    const navigate = useNavigate();
     const context = useContext(UserContext);
+    const [show, setShow] = useState(false);
     if (!context) {
         throw new Error("User is undefined rn");
+    }
+
+    function logout() {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        setUser("");
+        navigate("/");
     }
     const { user, setUser } = context;
     return (<div className='p-5 flex flex-wrap justify-between pl-[8vw] pr-[8vw]'>
@@ -15,14 +25,23 @@ const Header: React.FC = () => {
         </div >
 
         {!user && <div className='flex gap-2 text-sm'>
-            <div className='text-[#1AC29F] p-3 font-semibold'>Log in</div>
-            <div className='bg-[#1AC29F] p-3 text-white font-semibold rounded-md cursor-pointer border-b-2 border-gray-400 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:border-b-0'>Sign up</div>
+            <div className='text-[#1AC29F] p-3 font-semibold cursor-pointer' onClick={() => navigate('/login')}>Log in</div>
+            <div className='bg-[#1AC29F] p-3 text-white font-semibold rounded-md cursor-pointer border-b-2 border-gray-400 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:border-b-0' onClick={() => navigate('/signup')}>Sign up</div>
         </div>}
 
         {
-            user && <div className='flex gap-1 items-center'>
-                <img src={Avtar} className='rounded-full w-7'></img>
-                <div className='font-bold text-[#34383C] text-md'>{user}</div>
+            user &&
+            <div>
+                <div className='flex gap-1 items-center'>
+                    <img src={Avtar} className='rounded-full w-7'></img>
+                    <div className='font-bold text-[#34383C] text-md' onClick={() => setShow(!show)}>{user}</div>
+                </div>
+                {show && (
+                    <div className='shadow-md p-2 absolute'>
+                        <p onClick={() => navigate("/home/dashboard")}>Profile</p>
+                        <button className='text-red-600' onClick={logout}>Log out</button>
+                    </div>
+                )}
             </div>
         }
     </div >)

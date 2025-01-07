@@ -10,6 +10,7 @@ const Transaction = require('../db/Models/Transaction');
 const Notification = require('../db/Models/Notification');
 const Expense = require('../db/Models/Expense');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
@@ -43,6 +44,12 @@ app.post('/signups', async (req, res) => {
         const user = new User({ email, password, name });
         await user.save();
         const token = jwt.sign({ user_id: user._id }, `secret`, { expiresIn: '30d' });
+
+        const group = await Group.findById("677bdbe1546d018750d81899");
+        group.members.push(user.email);
+        user.groups.push("677bdbe1546d018750d81899");
+        await user.save();
+        await group.save();
         res.status(200).send({ token });
     } catch (e) {
         res.status(400).send({ error: e.message });
@@ -107,6 +114,7 @@ app.post('/otp', async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         res.status(400).send(error);
     }
 });
@@ -172,7 +180,7 @@ app.post('/getUserGroups', async (req, res) => {
         response.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         res.status(200).send(response);
     } catch (e) {
-        response.status(400).send(e);
+        res.status(400).send(e);
     }
 })
 
@@ -269,20 +277,29 @@ app.post('/getNotifications', async (req, res) => {
 app.post('/getExpense', async (req, res) => {
     const { username } = req.body;
     const user = await User.findOne({ name: username });
-    const expense = await Expense.find({ to: user._id }).sort({ timestamp: -1 });
-    res.status(200).send(expense);
+    if (user) {
+        const expense = await Expense.find({ to: user._id }).sort({ timestamp: -1 });
+        return res.status(200).send(expense);
+    }
+    res.status(400).send("Error");
+
 })
 
 app.post('/getUserData', async (req, res) => {
-    const { username } = req.body;
-    const user = await User.findOne({ name: username });
-    const response = {
-        username: user.name,
-        email: user.email,
-        JoinedDate: user.JoinedDate,
-        groups: user.groups
+    try {
+        const { username } = req.body;
+        const user = await User.findOne({ name: username });
+        const response = {
+            username: user.name,
+            email: user.email,
+            JoinedDate: user.JoinedDate,
+            groups: user.groups
+        }
+        return res.status(200).send(response);
+    } catch (e) {
+        res.status(400).send(e);
     }
-    res.status(200).send(response);
+
 })
 
 app.post('/changePassword', async (req, res) => {

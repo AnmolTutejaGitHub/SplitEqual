@@ -9,6 +9,7 @@ import Heart from '../assets/landing-whereabout/8205b59f-70fe-4986-ab74-68cd170f
 import Plane2 from '../assets/landing-whereabout/Plane 2.png';
 import CoreFeature from '../assets/core-feature.svg';
 import Footer from '../Components/Footer';
+import { useNavigate } from "react-router-dom";
 
 interface Review {
     pic?: string;
@@ -16,6 +17,7 @@ interface Review {
     by: string
 }
 const Landing: React.FC = () => {
+    const navigate = useNavigate();
     const features: string[][] = [
         ["Add groups and friends", "Split expenses, record debts", "Equal or unequal splits", "Split by % or shares", "Calculate total balances", "Recurring expenses"],
         ["Spending totals", "Payment integrations", "Unlimited expenses", "Charts and graphs", "A totally ad-free experience"],
@@ -70,7 +72,7 @@ const Landing: React.FC = () => {
                 <div className="flex flex-col gap-2 items-center w-72 text-center">
                     <img src={ReviewImg} className="w-20 rounded-full" ></img>
                     <p className="font-light">Join Anmol and NaN others who keep track of shared expenses and balances with housemates, trips, groups, friends, and family.</p>
-                    <button className="text-md bg-[#F6723F] p-3 rounded-md text-white w-40 border-b-2 border-gray-400 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:border-b-0">Sign up</button>
+                    <button className="text-md bg-[#F6723F] p-3 rounded-md text-white w-40 border-b-2 border-gray-400 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:border-b-0" onClick={() => navigate('/signup')}>Sign up</button>
                 </div>
             </div>
         </div>
@@ -85,7 +87,7 @@ const Landing: React.FC = () => {
                     <img src={Heart} className="w-10"></img>
                 </div>
                 <p>Keep track of your shared expenses and <br />balances with housemates, trips, groups, <br />friends, and family.</p>
-                <button className="text-md bg-[#1AC29F] p-3 rounded-md text-white w-40 border-b-2 border-gray-400 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:border-b-0">Sign up</button>
+                <button className="text-md bg-[#1AC29F] p-3 rounded-md text-white w-40 border-b-2 border-gray-400 shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:border-b-0" onClick={() => navigate('/signup')}>Sign up</button>
             </div>
             <div className="w-[50%]">
                 <img src={Plane2} className="h-[400px]"></img>
