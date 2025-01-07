@@ -32,7 +32,7 @@ const GroupPage: React.FC = () => {
     const [reRender, setReRender] = useState(0);
 
     async function getGroupData() {
-        const response = await axios.post(`http://localhost:8080/getgroupData`, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getgroupData`, {
             groupid: groupid
         })
         //console.log(response.data);
@@ -59,7 +59,7 @@ const GroupPage: React.FC = () => {
     }
 
     async function getExpensesHistory(): Promise<void> {
-        const response = await axios.post(`http://localhost:8080/getGroupExpenseHistory`, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getGroupExpenseHistory`, {
             groupid: groupid
         });
         const data = response.data;

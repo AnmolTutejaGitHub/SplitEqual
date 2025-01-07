@@ -6,9 +6,9 @@ const Footer: React.FC = () => {
 
     function RenderList(list: string[]): JSX.Element[] {
         return (
-            list.map((item) => {
+            list.map((item, index) => {
                 return (
-                    <div>{item}</div>
+                    <div key={index}>{item}</div>
                 )
             })
         )

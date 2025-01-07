@@ -16,14 +16,14 @@ const Home: React.FC = () => {
     return (<div>
         <Header />
 
-        <div className="flex">
-            <div className="w-[30%]">
+        <div className="flex flex-col md:flex-row">
+            <div className="w-full md:w-[30%]">
                 <SideBar />
             </div>
-            <div className="w-[40%]">
+            <div className="w-full md:w-[40%]">
                 <Dashboard />
             </div>
-            <div className="w-[30%]">
+            <div className="w-full md:w-[30%]">
                 <RightSide />
             </div>
         </div>

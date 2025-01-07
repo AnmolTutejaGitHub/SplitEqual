@@ -46,7 +46,7 @@ const AddExpense: React.FC<AddExpenseProp> = ({ groupData, closeExpensePopup }) 
                 return toast.error(`can't have $0 as expense`);
             }
 
-            const response = await axios.post(`http://localhost:8080/addExpense`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/addExpense`, {
                 groupid: groupData._id,
                 amount: amount,
                 paidBy: user,

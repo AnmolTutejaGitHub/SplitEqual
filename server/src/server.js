@@ -13,8 +13,10 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const PORT = process.env.PORT || 8080;
 
+const DemoGroup = "677d96bcd0cc7b8939021119";
+
 app.use(cors({
-    origin: `http://localhost:5173`,
+    origin: `${process.env.FRONTEND_URL}`,
     credentials: true
 }));
 app.use(express.json());
@@ -32,6 +34,15 @@ app.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ user_id: user._id }, `secret`, { expiresIn: '30d' });
+
+        const group = await Group.findById(DemoGroup);
+        if (!group.members.includes(user.email)) {
+            group.members.push(user.email);
+            user.groups.push(DemoGroup);
+            await user.save();
+            await group.save();
+        }
+
         res.status(200).send({ token });
     } catch (e) {
         res.status(500).send({ error: e.message });
@@ -45,9 +56,9 @@ app.post('/signups', async (req, res) => {
         await user.save();
         const token = jwt.sign({ user_id: user._id }, `secret`, { expiresIn: '30d' });
 
-        const group = await Group.findById("677bdbe1546d018750d81899");
+        const group = await Group.findById(DemoGroup);
         group.members.push(user.email);
-        user.groups.push("677bdbe1546d018750d81899");
+        user.groups.push(DemoGroup);
         await user.save();
         await group.save();
         res.status(200).send({ token });
@@ -139,7 +150,7 @@ app.post('/invite', async (req, res) => {
             from: "anmoltutejaserver@gmail.com",
             to: email,
             subject: 'Invite To Join',
-            text: `${senderEmail} invites You to join Split Equal ${`http://localhost:5173`} (yah I know)`,
+            text: `${senderEmail} invites You to join SplitEqual ${process.env.FRONTEND_URL}`,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

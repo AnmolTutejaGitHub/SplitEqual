@@ -21,7 +21,7 @@ const Expense: React.FC = () => {
     const [expenses, setExpenses] = useState<expense[]>([]);
 
     async function getExpenses() {
-        const response = await axios.post(`http://localhost:8080/getExpense`, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getExpense`, {
             username: user
         })
 
@@ -43,9 +43,9 @@ const Expense: React.FC = () => {
         return date.toLocaleDateString('en-US', options);
     }
 
-    const renderExpense = expenses.map((n) => {
+    const renderExpense = expenses.map((n, index) => {
         return (
-            <div className='p-4 border-b-2 border-[#DDDDDD]'>
+            <div className='p-4 border-b-2 border-[#DDDDDD]' key={index}>
                 <div className='font-bold text-[#5AC5A6]'>{formatDate(n.timestamp)}</div>
                 <div>{n.text}</div>
             </div>

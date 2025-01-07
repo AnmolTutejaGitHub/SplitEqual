@@ -35,7 +35,7 @@ const SideBar: React.FC = () => {
 
     const navigate = useNavigate();
     const tweetMessage: string =
-        "Splitwise makes it easy to split expenses with housemates, trips, groups, friends, and family. Check it out!";
+        `SplitEqual makes it easy to split expenses with housemates, trips, groups, friends, and family. Check it out! ${import.meta.env.VITE_API_URL}`;
 
     const handleTweetClick = (): void => {
         const twitterUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -46,7 +46,7 @@ const SideBar: React.FC = () => {
 
     async function getGroups() {
         try {
-            const response = await axios.post(`http://localhost:8080/getUserGroups`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/getUserGroups`, {
                 username: user
             })
             setGroups(response.data as Group[]);
@@ -79,7 +79,7 @@ const SideBar: React.FC = () => {
                 toast.dismiss(toastId);
                 return;
             }
-            const response = await axios.post(`http://localhost:8080/invite`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/invite`, {
                 username: user,
                 email: email
             })

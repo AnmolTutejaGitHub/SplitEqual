@@ -23,7 +23,7 @@ function Provider({ children }: ProviderProps) {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const response = await axios.post(`http://localhost:8080/verifytokenAndGetUsername`, {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/verifytokenAndGetUsername`, {
                     token: token
                 });
                 if (response.status === 200) setUser(response.data.user);

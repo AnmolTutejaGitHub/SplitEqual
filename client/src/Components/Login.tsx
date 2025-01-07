@@ -29,7 +29,7 @@ function Login() {
         const toastId = toast.loading('logging..');
         try {
             setLoginLoader(true);
-            const response = await axios.post(`http://localhost:8080/login`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
                 name: EnteredUser,
                 email: EnteredEmail,
                 password: EnteredPassword,

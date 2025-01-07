@@ -22,7 +22,7 @@ const RightSidePassword: React.FC = () => {
             return;
         }
         try {
-            const response = await axios.post(`http://localhost:8080/changePassword`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/changePassword`, {
                 username: user,
                 currPassword: currPassword,
                 newPassword: newPassword

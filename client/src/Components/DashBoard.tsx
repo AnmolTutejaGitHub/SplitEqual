@@ -20,7 +20,7 @@ const DashBoard: React.FC = () => {
     const { user, setUser } = context;
 
     async function getData() {
-        const response = await axios.post(`http://localhost:8080/getUserData`, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getUserData`, {
             username: user
         })
         const data: User = response.data;

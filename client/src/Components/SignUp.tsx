@@ -15,7 +15,7 @@ function Signup() {
     async function SignUp() {
         const toastid = toast.loading('singing up');
         try {
-            const response = await axios.post(`http://localhost:8080/signups`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/signups`, {
                 email: EnteredEmail,
                 password: EnteredPassword,
                 name: EnteredUser

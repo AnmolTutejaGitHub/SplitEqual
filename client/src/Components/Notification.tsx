@@ -18,12 +18,11 @@ const Notification: React.FC = () => {
     const { user, setUser } = context;
 
     async function getNotifications() {
-        const response = await axios.post(`http://localhost:8080/getNotifications`, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/getNotifications`, {
             username: user
         })
 
         const data: notification[] = response.data;
-        console.log("Hello", data);
         setNoti(data);
     }
 
@@ -41,9 +40,9 @@ const Notification: React.FC = () => {
         return date.toLocaleDateString('en-US', options);
     }
 
-    const renderNotifications = noti.map((n) => {
+    const renderNotifications = noti.map((n, index) => {
         return (
-            <div className='p-4 border-b-2 border-[#DDDDDD]'>
+            <div className='p-4 border-b-2 border-[#DDDDDD]' key={index}>
                 <div className='font-bold text-[#5AC5A6]'>{formatDate(n.timestamp)}</div>
                 <div>{n.text}</div>
             </div>

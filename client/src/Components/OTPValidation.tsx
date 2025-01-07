@@ -24,7 +24,7 @@ function OTPValidation() {
             const otp = generateOTP();
             setSentOTP(otp);
 
-            await axios.post(`http://localhost:8080/otp`, { email, otp });
+            await axios.post(`${import.meta.env.VITE_API_URL}/otp`, { email, otp });
             toast.success("Check Your Inbox");
         } catch (e) {
             toast.error("Some Error Occurred");

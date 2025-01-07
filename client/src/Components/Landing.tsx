@@ -25,9 +25,9 @@ const Landing: React.FC = () => {
 
     const RenderFeatures: JSX.Element[] = features.map((ufeatures, groupIndex) => {
         return (
-            <div className="space-y-4">
+            <div className="space-y-4" key={groupIndex}>
                 {ufeatures.map((feature, index) => (
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center" key={index}>
                         <img src={CoreFeature}></img>
                         {feature}
                     </div>
@@ -45,9 +45,9 @@ const Landing: React.FC = () => {
         { content: "I use it everyday. I use it for trips, roommates, loans. I love splitEqual.", by: "Trickseyus, iOS" },
     ];
 
-    const renderReviews: JSX.Element[] = Reviews.map((review) => {
+    const renderReviews: JSX.Element[] = Reviews.map((review, index) => {
         return (
-            <div className="pt-6 pl-6 pr-6 pb-2 w-96 border border-gray-400 border-b-2 border-b-gray-600 shadow-sm rounded-md hover:border-b">
+            <div className="pt-6 pl-6 pr-6 pb-2 w-96 border border-gray-400 border-b-2 border-b-gray-600 shadow-sm rounded-md hover:border-b" key={index}>
                 <div>{review.content}</div>
                 <div className="flex gap-2 items-center pt-4">
                     <img src={`https://ui-avatars.com/api/?name=${review.by}`} className="rounded-sm"></img>
