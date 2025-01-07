@@ -24,7 +24,7 @@ function ForgetPassword() {
         const newOTP = generateOTP();
         const toastid = toast.loading('sending');
         try {
-            await axios.post(`$${import.meta.env.VITE_API_URL}/otp`, { email, otp: newOTP });
+            await axios.post(`${import.meta.env.VITE_API_URL}/otp`, { email, otp: newOTP });
             setgeneratedotp(newOTP);
             toast.success("Otp sent Successfully!");
         } catch (e) {
