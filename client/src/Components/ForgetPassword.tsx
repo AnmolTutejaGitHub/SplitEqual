@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios, { AxiosError } from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 function ForgetPassword() {
     const [enteredOTP, setEnteredOTP] = useState('');
@@ -11,7 +10,6 @@ function ForgetPassword() {
     const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const notify = (text: string) => toast.success(text);
 
     function generateOTP() {
         let otp = '';
@@ -25,25 +23,49 @@ function ForgetPassword() {
     async function sendOTP(e: React.FormEvent) {
         e.preventDefault();
         const newOTP = generateOTP();
+        const toastid = toast.loading('sending');
         try {
             await axios.post(`http://localhost:8080/otp`, { email, otp: newOTP });
             setError("");
             setgeneratedotp(newOTP);
-            notify("Otp sent Successfully!");
+            toast.success("Otp sent Successfully!");
         } catch (e) {
-            setError("Error sending OTP");
+            toast.error("Error sending OTP ")
+        } finally {
+            toast.dismiss(toastid);
         }
     }
 
     async function reset(e: React.FormEvent) {
         e.preventDefault();
         setError('');
+        const toastid = toast.loading("Resetting");
 
-        if (!email.trim()) return setError('please Enter Email');
-        if (!generatedotp.trim()) return setError('OTP verification failed');
-        if (!enteredOTP.trim()) return setError('Please enter the OTP code');
-        if (!password.trim()) return setError('Please enter a new password');
-        if (enteredOTP.trim() != generatedotp) return setError("OTP doesn't match");
+        if (!email.trim()) {
+            toast.error('please Enter Email');
+            toast.dismiss(toastid);
+            return;
+        }
+        if (!generatedotp.trim()) {
+            toast.error('OTP verification failed');
+            toast.dismiss(toastid);
+            return;
+        }
+        if (!enteredOTP.trim()) {
+            toast.error('Please Enter the otp code');
+            toast.dismiss(toastid);
+            return;
+        }
+        if (!password.trim()) {
+            toast.error('Password not provided');
+            toast.dismiss(toastid);
+            return
+        }
+        if (enteredOTP.trim() != generatedotp) {
+            toast.error('OTP does not match');
+            toast.dismiss(toastid);
+            return
+        }
 
         try {
             const response = await axios.post(`http://localhost:8080/resetpassword`, {
@@ -51,21 +73,30 @@ function ForgetPassword() {
                 password
             });
 
-            notify('Password reset successful');
+            toast.success('Password reset successful');
             setPassword('');
             setTimeout(() => navigate('/login'), 2000);
         } catch (error) {
             console.log(error);
-            // if (error?.response?.data?.message) setError(error?.response?.data?.message);
-            // else if (error?.response?.data?.error) setError(error.response.data.error);
-            //else 
-            setError('Error resetting password');
+
+            if (error instanceof AxiosError) {
+                if (error.response?.data?.message) {
+                    toast.error(error.response.data.message);
+                } else if (error.response?.data?.error) {
+                    toast.error(error.response.data.error);
+                } else {
+                    toast.error('Error resetting password');
+                }
+            } else {
+                toast.error('An unexpected error occurred');
+            }
+        } finally {
+            toast.dismiss(toastid);
         }
     }
 
     return (
         <div className="flex justify-center items-center">
-            <ToastContainer />
             <div className='mt-[12%] w-[400px]'>
                 <form className='p-[2rem] rounded-[5px] flex gap-[1rem] flex-col'>
                     <div className='flex justify-center'>

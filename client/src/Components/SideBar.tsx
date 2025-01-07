@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import UserContext from "../Context/UserContext";
 import { IoMdPricetag } from "react-icons/io";
 import { useLocation } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface Group {
     name: string,
@@ -26,6 +27,7 @@ const SideBar: React.FC = () => {
     const [groups, setGroups] = useState<Group[]>([]);
     const [showAllGroups, setShowAllGroups] = useState<boolean>(false);
     const groupsToShow = showAllGroups ? groups : groups.slice(0, 3);
+    const [email, setEmail] = useState('');
 
     const location = useLocation();
     const split = location.pathname.split('/');
@@ -62,6 +64,32 @@ const SideBar: React.FC = () => {
     useEffect(() => {
         getGroups();
     }, [])
+
+
+    const isValidEmail = (email: string): boolean => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    };
+
+    async function Invite() {
+        const toastId = toast.loading('Inviting');
+        try {
+            if (!isValidEmail(email)) {
+                toast.error('Enter a valid Email id');
+                toast.dismiss(toastId);
+                return;
+            }
+            const response = await axios.post(`http://localhost:8080/invite`, {
+                username: user,
+                email: email
+            })
+            toast.success('Invitation send');
+        } catch (e) {
+            toast.error('some error occurred');
+        } finally {
+            toast.dismiss(toastId);
+        }
+    }
 
 
     return (<div className='p-4 text-gray-500 text-sm pl-[55%] flex flex-col gap-2'>
@@ -104,8 +132,8 @@ const SideBar: React.FC = () => {
 
         <div className='border border-[#CCCCCC] flex flex-col gap-1'>
             <div className='p-1 bg-[#5AC5A6] text-white'>Invite friends</div>
-            <input className="ml-2 mr-2 outline-none p-1 border border-[#CCCCCC] placeholder:text-[12px] rounded-sm" placeholder="Enter an email address" />
-            <button className=" bg-gray-200 border border-gray-400 text-[11px] ml-2 text-black font-light rounded hover:bg-gray-300 focus:outline-none w-20 mb-2">Send Invite</button>
+            <input className="ml-2 mr-2 outline-none p-1 border border-[#CCCCCC] placeholder:text-[12px] rounded-sm" placeholder="Enter an email address" onChange={(e) => setEmail(e.target.value)} />
+            <button className=" bg-gray-200 border border-gray-400 text-[11px] ml-2 text-black font-light rounded hover:bg-gray-300 focus:outline-none w-20 mb-2" onClick={Invite}>Send Invite</button>
         </div>
 
 

@@ -2,8 +2,9 @@ import { useContext, useEffect } from "react";
 import UserContext from "../Context/UserContext";
 import { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
+import toast, { Toaster } from 'react-hot-toast';
 
 function Login() {
     const [EnteredUser, setEnteredUser] = useState<string>('');
@@ -25,6 +26,7 @@ function Login() {
     // }, [user])
 
     async function handleLogin() {
+        const toastId = toast.loading('logging..');
         try {
             setLoginLoader(true);
             const response = await axios.post(`http://localhost:8080/login`, {
@@ -40,10 +42,16 @@ function Login() {
                 sessionStorage.setItem('user', EnteredUser);
                 setUser(EnteredUser);
                 navigate('/OTPValidation', { state: { email: EnteredEmail } });
+                toast.success('Login Successfull');
             }
         } catch (error) {
-            setError("Some error Occurred");
+            if (error instanceof AxiosError) {
+                toast.error(error.response?.data?.error || "Some error Occurred");
+            } else {
+                toast.error("Some error Occurred");
+            }
         } finally {
+            toast.dismiss(toastId);
             setLoginLoader(false);
         }
     }

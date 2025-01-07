@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Logo from '../assets/Logo-removebg-preview.png';
+import toast, { Toaster } from 'react-hot-toast';
 
 function OTPValidation() {
-    const notify = () => toast.success("Otp sent Successfully!");
     const navigate = useNavigate();
     const location = useLocation();
     const { email } = location.state || '';
 
     const [enteredOTP, setEnteredOTP] = useState('');
     const [sentOTP, setSentOTP] = useState('');
-    const [error, setError] = useState('');
+    //const [error, setError] = useState('');
     const [otpSending, setSending] = useState(false);
 
     useEffect(() => {
@@ -21,18 +18,19 @@ function OTPValidation() {
     }, []);
 
     async function sendOTP() {
+        const toastid = toast.loading("sending");
         try {
             setSending(true);
             const otp = generateOTP();
             setSentOTP(otp);
 
             await axios.post(`http://localhost:8080/otp`, { email, otp });
-            setError("");
-            notify();
+            toast.success("Check Your Inbox");
         } catch (e) {
-            setError("Error sending OTP");
+            toast.error("Some Error Occurred");
         } finally {
             setSending(false);
+            toast.dismiss(toastid);
         }
     }
 
@@ -42,7 +40,7 @@ function OTPValidation() {
             navigate("/home/notifications");
             //window.location.reload();
         } else {
-            setError("Invalid OTP");
+            toast.error("Invalid OTP");
         }
     }
 
@@ -57,7 +55,6 @@ function OTPValidation() {
 
     return (
         <div className="flex justify-center items-center">
-            <ToastContainer />
             <div className="mt-[12%] w-[400px]">
                 <div>
                     <form className='p-[2rem] rounded-[5px] flex gap-[1rem] flex-col'>
@@ -73,8 +70,6 @@ function OTPValidation() {
                         />
                         <button onClick={sendOTP} disabled={otpSending} className="p-2 bg-[#5BC4A6] rounded-sm text-white">Generate OTP</button>
                         <button onClick={validateOTP} className="p-2 bg-[#5BC4A6] rounded-sm text-white">Validate OTP</button>
-                        {error && <p className="text-red-600">*{error}</p>}
-                        {otpSending && <p>sending...</p>}
                     </form>
 
                 </div>

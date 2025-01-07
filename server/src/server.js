@@ -119,6 +119,42 @@ app.post('/otp', async (req, res) => {
     }
 });
 
+app.post('/invite', async (req, res) => {
+    try {
+        const { email, username } = req.body;
+        const user = await User.findOne({ name: username });
+        const senderEmail = user.email;
+
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: "anmoltutejaserver@gmail.com",
+                pass: process.env.NODEMAIL_APP_PASSWORD,
+            },
+        });
+
+        let mailOptions = {
+            from: "anmoltutejaserver@gmail.com",
+            to: email,
+            subject: 'Invite To Join',
+            text: `${senderEmail} invites You to join Split Equal ${`http://localhost:5173`} (yah I know)`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return res.status(400).send(error);
+            }
+            res.status(200).send("success");
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send(error);
+    }
+});
+
 
 app.post('/getUser', async (req, res) => {
     const { username } = req.body;

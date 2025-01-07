@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios, { AxiosError } from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 import Logo from '../assets/Logo-removebg-preview.png';
 
 function Signup() {
@@ -14,7 +13,7 @@ function Signup() {
     const navigate = useNavigate();
 
     async function SignUp() {
-        const notify = () => toast.success("Sign up Successful!");
+        const toastid = toast.loading('singing up');
         try {
             const response = await axios.post(`http://localhost:8080/signups`, {
                 email: EnteredEmail,
@@ -26,7 +25,7 @@ function Signup() {
                 const token = response.data.token;
                 localStorage.setItem('token', token);
 
-                notify();
+                toast.success('success');
 
                 setTimeout(() => {
                     navigate("/login");
@@ -34,13 +33,18 @@ function Signup() {
 
             }
         } catch (error) {
-            setError("Some error Occurred");
+            if (error instanceof AxiosError) {
+                toast.error(error.response?.data?.error || "Some error Occurred");
+            } else {
+                toast.error("Some error Occurred");
+            }
+        } finally {
+            toast.dismiss(toastid);
         }
     }
 
     return (
         <div className="flex justify-center items-center">
-            <ToastContainer />
             <div className='mt-20 w-[400px]'>
                 <form className='p-[2rem] rounded-[5px] flex gap-[1rem] flex-col' onSubmit={(e) => { e.preventDefault(); SignUp(); }}>
                     <div className='flex justify-center'>
