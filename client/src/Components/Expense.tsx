@@ -63,7 +63,7 @@ const Expense: React.FC = () => {
                 <img src={Settled} ></img>
                 <div className='mt-10'>
                     <p className='font-bold text-2xl'>No Expense</p>
-                    <p className='text-[#999999] font-semibold text-sm'>You are pro , you managed with no expense</p>
+                    <p className='text-[#999999] font-semibold text-sm'>You are pro , you managed with no expense. Owe or lend someone in a group</p>
                 </div>
             </div>
         }

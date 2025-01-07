@@ -115,7 +115,7 @@ const GroupPage: React.FC = () => {
 
             <div className="flex gap-1 text-white">
                 <button className="bg-[#FF652F] p-2 rounded-md text-sm" onClick={() => setShowExpensePage(true)}>Add Expense</button>
-                <button className="bg-[#5AC5A6] p-2 rounded-md text-sm">Settle Up</button>
+                <button className="bg-[#5AC5A6] p-2 rounded-md text-sm">Settle Up <span className="text-[10px]">(soon)</span></button>
             </div>
         </div>
 

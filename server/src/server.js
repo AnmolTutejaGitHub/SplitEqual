@@ -9,7 +9,7 @@ const Group = require('../db/Models/Group');
 const Transaction = require('../db/Models/Transaction');
 const Notification = require('../db/Models/Notification');
 const Expense = require('../db/Models/Expense');
-
+const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
@@ -273,6 +273,33 @@ app.post('/getExpense', async (req, res) => {
     res.status(200).send(expense);
 })
 
+app.post('/getUserData', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    const response = {
+        username: user.name,
+        email: user.email,
+        JoinedDate: user.JoinedDate,
+        groups: user.groups
+    }
+    res.status(200).send(response);
+})
+
+app.post('/changePassword', async (req, res) => {
+    const { username, currPassword, newPassword } = req.body;
+    const user = await User.findOne({ name: username });
+    try {
+        const isValid = await bcrypt.compare(currPassword, user.password);
+        if (isValid) {
+            user.password = newPassword;
+            await user.save();
+            return res.status(200).send('success');
+        }
+        res.status(400).send('Password does not match');
+    } catch (e) {
+        res.status(400).send(e);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
