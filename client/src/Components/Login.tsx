@@ -6,7 +6,7 @@ import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 
 function Login() {
-    const [EnteredUser, setEnteredUser] = useState('');
+    const [EnteredUser, setEnteredUser] = useState<string>('');
     const [EnteredEmail, setEnteredEmail] = useState('');
     const [EnteredPassword, setEnteredPassword] = useState('');
     const [error, setError] = useState('');
@@ -35,7 +35,7 @@ function Login() {
 
             if (response.status === 200) {
                 const token = response.data.token;
-                const EnteredUser = response.data.user;
+                //const EnteredUser = response.data.user;
                 localStorage.setItem('token', token);
                 sessionStorage.setItem('user', EnteredUser);
                 setUser(EnteredUser);

@@ -40,6 +40,7 @@ function OTPValidation() {
         if (enteredOTP === '') return;
         if (sentOTP === enteredOTP) {
             navigate("/home/notifications");
+            //window.location.reload();
         } else {
             setError("Invalid OTP");
         }

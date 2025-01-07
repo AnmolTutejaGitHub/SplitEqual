@@ -267,10 +267,15 @@ app.post('/IndividualGroupExpense', async (req, res) => {
 
 
 app.post('/getNotifications', async (req, res) => {
-    const { username } = req.body;
-    const user = await User.findOne({ name: username });
-    const notifications = await Notification.find({ to: user._id }).sort({ timestamp: -1 });
-    res.status(200).send(notifications);
+    try {
+        const { username } = req.body;
+        const user = await User.findOne({ name: username });
+        const notifications = await Notification.find({ to: user._id }).sort({ timestamp: -1 });
+        res.status(200).send(notifications);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+
 })
 
 

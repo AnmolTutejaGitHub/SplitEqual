@@ -2,8 +2,8 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 import axios from "axios";
 
 interface UserContextType {
-    user: string;
-    setUser: React.Dispatch<React.SetStateAction<string>>;
+    user: string | null;
+    setUser: React.Dispatch<React.SetStateAction<string | null>>;
     loading: boolean;
 }
 
@@ -13,8 +13,8 @@ interface ProviderProps {
 }
 
 function Provider({ children }: ProviderProps) {
-    const [user, setUser] = useState<string>(() => {
-        return sessionStorage.getItem('user') || '';
+    const [user, setUser] = useState<string | null>(() => {
+        return sessionStorage.getItem('user') || null;
     });
 
     const [loading, setloading] = useState<boolean>(true);
@@ -22,10 +22,13 @@ function Provider({ children }: ProviderProps) {
     async function decodeToken() {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`http://localhost:8080/verifytokenAndGetUsername`, {
-                token: token
-            });
-            if (response.status === 200) setUser(response.data.user);
+            if (token) {
+                const response = await axios.post(`http://localhost:8080/verifytokenAndGetUsername`, {
+                    token: token
+                });
+                if (response.status === 200) setUser(response.data.user);
+            }
+
         } catch (e) {
             console.log(e)
         }
