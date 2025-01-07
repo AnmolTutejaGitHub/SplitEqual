@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const Group = require('../db/Models/Group');
 const Transaction = require('../db/Models/Transaction');
 const Notification = require('../db/Models/Notification');
+const Expense = require('../db/Models/Expense');
 
 const PORT = process.env.PORT || 8080;
 
@@ -209,11 +210,16 @@ app.post('/addExpense', async (req, res) => {
         if (usr.email != user.email) {
             const notification = new Notification({ to: usr._id, text: `${user.email} added ${description} amounting $ ${amount} in ${group.name}` });
             await notification.save();
+            const exp = new Expense({ to: usr._id, text: `${user.email} lent you ${amount / group.members.length} in ${group.name} for ${description}` });
+            await exp.save();
         }
     }
 
     const notification = new Notification({ to: user._id, text: `You added ${description} amounting $ ${amount} in ${group.name}` });
     await notification.save();
+
+    const exp = new Expense({ to: user._id, text: `You added ${description} amounting $ ${amount} in ${group.name}` });
+    await exp.save();
 
     res.status(200).send(transaction);
 })
@@ -257,6 +263,14 @@ app.post('/getNotifications', async (req, res) => {
     const user = await User.findOne({ name: username });
     const notifications = await Notification.find({ to: user._id }).sort({ timestamp: -1 });
     res.status(200).send(notifications);
+})
+
+
+app.post('/getExpense', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ name: username });
+    const expense = await Expense.find({ to: user._id }).sort({ timestamp: -1 });
+    res.status(200).send(expense);
 })
 
 

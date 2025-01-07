@@ -65,7 +65,7 @@ const SideBar: React.FC = () => {
 
 
     return (<div className='p-4 text-gray-500 text-sm pl-[55%] flex flex-col gap-2'>
-        <div className='flex gap-1 items-center hover:bg-[#EEEEEE] p-1'>
+        <div className={`flex gap-1 items-center hover:bg-[#EEEEEE] p-1 ${location.pathname.includes('dashboard') ? 'font-bold text-[#5AC5A6] border-l-4 border-[#5AC5A6] pl-1' : ''}`} onClick={() => navigate('/home/dashboard')}>
             <img src={Logo} className='w-6'></img>
             <div>Dashboard</div>
         </div>
@@ -76,7 +76,7 @@ const SideBar: React.FC = () => {
             <div>Recent Activity</div>
         </div>
 
-        <div className='flex gap-1 items-center hover:bg-[#EEEEEE] p-1'>
+        <div className={`flex gap-1 items-center hover:bg-[#EEEEEE] p-1 ${location.pathname.includes('expenses') ? 'font-bold text-[#5AC5A6] border-l-4 border-[#5AC5A6] pl-1' : ''}`} onClick={() => navigate('/home/expenses')}>
             <TfiMenuAlt />
             <div>All Expenses</div>
         </div>
@@ -94,12 +94,12 @@ const SideBar: React.FC = () => {
         </div>
 
 
-        <div>
+        {/* <div>
             <div className='bg-[#F6F6F6] p-1 flex justify-between text-gray-400 hover:bg-[#EEEEEE]'>
                 <div>Friends</div>
                 <div className='hover:text-[#6ECAB0] cursor-pointer'>+ add</div>
             </div>
-        </div>
+        </div> */}
 
 
         <div className='border border-[#CCCCCC] flex flex-col gap-1'>

@@ -3,6 +3,8 @@ import UserContext from "../Context/UserContext";
 import { Routes, Route } from "react-router-dom";
 import GroupPage from "./GroupPage";
 import Notification from "./Notification";
+import DashBoard from "./DashBoard";
+import Expense from './Expense';
 
 const Dashboard: React.FC = () => {
     const context = useContext(UserContext);
@@ -16,6 +18,8 @@ const Dashboard: React.FC = () => {
         <Routes>
             <Route path="/group/:groupid" element={<GroupPage />} />
             <Route path="/notifications" element={<Notification />} />
+            <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/expenses" element={<Expense />} />
         </Routes>
     </div>)
 }
