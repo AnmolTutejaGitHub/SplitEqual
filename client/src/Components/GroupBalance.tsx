@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import Settled from '../assets/settled.png';
+import { ThreeDots } from 'react-loader-spinner';
+
 
 interface OwnerExpense {
     name: string,
@@ -28,6 +30,7 @@ const GroupBalance: React.FC = () => {
     const [ownersExpenses, setOwnersExpenses] = useState<OwnerExpense[]>([]);
     const [debts, setDebts] = useState<Debt[]>([]);
     const [groupData, setGroupData] = useState<GroupData | null>(null);
+    const [loading, setloading] = useState(true);
 
     async function getIndividualExpense(): Promise<void> {
         const response = await axios.post<OwnerExpense[]>(`${import.meta.env.VITE_API_URL}/IndividualGroupExpense`, {
@@ -94,6 +97,7 @@ const GroupBalance: React.FC = () => {
     async function getData() {
         await getGroupData();
         await getIndividualExpense();
+        setloading(false);
     }
 
     const renderOwnersExpenses = ownersExpenses.map((owner, index) => {
@@ -109,19 +113,34 @@ const GroupBalance: React.FC = () => {
         );
     });
     return (<div className="p-4">
-        <div className="font-bold text-[#6A7280] text-sm">GROUP BALANCES</div>
-        <div className="bg-gray-100 font-bold">{renderOwnersExpenses}</div>
-        <div className="mt-4 font-bold text-[#6A7280] text-sm">SETTLEMENTS</div>
-        <div className="bg-gray-100 font-bold">{renderDebts}</div>
-        {debts.length == 0 &&
-            <div className="mt-6 flex">
-                <img src={Settled} className="h-96"></img>
-                <div className="mt-10">
-                    <div className="font-bold text-2xl">Your Group is Settled</div>
-                    <p className="text-sm text-[#999999] font-semibold">We will tell who owes who and how much</p>
+        {loading && <div className="mt-20 flex justify-center">
+            <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#5BC4A5"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+            />
+        </div>}
+
+        {!loading && <>
+            <div className="font-bold text-[#6A7280] text-sm">GROUP BALANCES</div>
+            <div className="bg-gray-100 font-bold">{renderOwnersExpenses}</div>
+            <div className="mt-4 font-bold text-[#6A7280] text-sm">SETTLEMENTS</div>
+            <div className="bg-gray-100 font-bold">{renderDebts}</div>
+            {debts.length == 0 &&
+                <div className="mt-6 flex">
+                    <img src={Settled} className="h-96"></img>
+                    <div className="mt-10">
+                        <div className="font-bold text-2xl">Your Group is Settled</div>
+                        <p className="text-sm text-[#999999] font-semibold">We will tell who owes who and how much</p>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </>}
     </div>)
 }
 export default GroupBalance;

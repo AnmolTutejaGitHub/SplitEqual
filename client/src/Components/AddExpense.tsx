@@ -65,6 +65,7 @@ const AddExpense: React.FC<AddExpenseProp> = ({ groupData, closeExpensePopup }) 
 
     return (
         <div className="w-80 mt-52 bg-white h-80 rounded-md">
+
             <div className="bg-[#5CC5A6] text-white font-bold p-1 rounded-t-md pl-2 flex items-center justify-between"><div>Add an Expense </div><div className="cursor-pointer" onClick={() => closeExpensePopup()}><IoMdClose /></div></div>
             <div className="border border-gray-400 pl-2">With <span className="font-bold">you</span> and All of <span className="font-bold">{groupData.name}</span></div>
             <div className="flex flex-col justify-center items-center">

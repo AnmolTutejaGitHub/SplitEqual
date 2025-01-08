@@ -1,11 +1,12 @@
 import Logo from '../assets/Splitwise_logo.png';
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import UserContext from "../Context/UserContext";
 import Avtar from '../assets/avatar-blue10-100px.png';
 import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const context = useContext(UserContext);
     const [show, setShow] = useState(false);
     if (!context) {
@@ -19,6 +20,17 @@ const Header: React.FC = () => {
         navigate("/");
     }
     const { user, setUser } = context;
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShow(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+    }, []);
+
+
     return (<div className='p-5 flex flex-wrap justify-between pl-[8vw] pr-[8vw]'>
         <div className='w-32'>
             < img src={Logo} ></img >
@@ -37,7 +49,7 @@ const Header: React.FC = () => {
                     <div className='font-bold text-[#34383C] text-md' onClick={() => setShow(!show)}>{user}</div>
                 </div>
                 {show && (
-                    <div className='shadow-md p-2 absolute'>
+                    <div className='shadow-md p-2 absolute' ref={dropdownRef}>
                         <p onClick={() => navigate("/home/dashboard")}>Profile</p>
                         <button className='text-red-600' onClick={logout}>Log out</button>
                     </div>

@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import UserContext from "../Context/UserContext";
 import Header from "./Header";
 import SideBar from "./SideBar";
 import Dashboard from "./Dashborad";
 import RightSide from "./RightSide";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
     const context = useContext(UserContext);
@@ -12,6 +13,12 @@ const Home: React.FC = () => {
     }
     const { user } = context;
     console.log(user);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) navigate('/');
+    }, [])
 
     return (<div>
         <Header />

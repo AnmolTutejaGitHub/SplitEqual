@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import AddExpense from "./AddExpense";
 import Bill from '../assets/Bill Type.png';
+import { ThreeDots } from 'react-loader-spinner';
 
 interface GroupData {
     _id: string,
@@ -30,6 +31,7 @@ const GroupPage: React.FC = () => {
     const [showExpensePage, setShowExpensePage] = useState(false);
     const [transactions, setTractions] = useState<Expense[]>([]);
     const [reRender, setReRender] = useState(0);
+    const [loading, setloading] = useState(true);
 
     async function getGroupData() {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/getgroupData`, {
@@ -65,6 +67,7 @@ const GroupPage: React.FC = () => {
         const data: any = response.data;
         const expenses: Expense[] = data;
         setTractions(expenses);
+        setloading(false);
     }
 
     function formatDate(dateString: string): string {
@@ -100,27 +103,41 @@ const GroupPage: React.FC = () => {
 
 
     return (<div>
-
-        {showExpensePage && <div className="fixed h-[100vh] w-[100vw] bg-black bg-opacity-50 top-0 left-0 flex justify-center ">
-            <AddExpense groupData={groupData as GroupData} closeExpensePopup={closeExpensePopup} />
+        {loading && <div className="mt-20 flex justify-center">
+            <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#5BC4A5"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+            />
         </div>}
 
+        {!loading && <>
+            {showExpensePage && <div className="fixed h-[100vh] w-[100vw] bg-black bg-opacity-50 top-0 left-0 flex justify-center ">
+                <AddExpense groupData={groupData as GroupData} closeExpensePopup={closeExpensePopup} />
+            </div>}
 
-        <div className="flex items-center gap-1 bg-[#EEEEEE] p-2 justify-between">
-            <img src={GroupHome} className="rounded-full w-9"></img>
-            <div>
-                <div className="font-bold text-2xl text-[#333333]">{groupData?.name}</div>
-                <div className="text-sm text-[#369076] font-semibold">{groupid}</div>
+
+            <div className="flex items-center gap-1 bg-[#EEEEEE] p-2 justify-between">
+                <img src={GroupHome} className="rounded-full w-9"></img>
+                <div>
+                    <div className="font-bold text-2xl text-[#333333]">{groupData?.name}</div>
+                    <div className="text-sm text-[#369076] font-semibold">{groupid}</div>
+                </div>
+
+                <div className="flex gap-1 text-white">
+                    <button className="bg-[#FF652F] p-2 rounded-md text-sm" onClick={() => setShowExpensePage(true)}>Add Expense</button>
+                    <button className="bg-[#5AC5A6] p-2 rounded-md text-sm">Settle Up <span className="text-[10px]">(soon)</span></button>
+                </div>
             </div>
 
-            <div className="flex gap-1 text-white">
-                <button className="bg-[#FF652F] p-2 rounded-md text-sm" onClick={() => setShowExpensePage(true)}>Add Expense</button>
-                <button className="bg-[#5AC5A6] p-2 rounded-md text-sm">Settle Up <span className="text-[10px]">(soon)</span></button>
-            </div>
-        </div>
-
-        <div className="flex flex-col mt-8">{renderExpenses}</div>
-        <div className="p-2 text-[#1AC29F] text-md">Total Group Expense <span className="font-bold">${calculateTotalExpense()}</span> </div>
+            <div className="flex flex-col mt-8">{renderExpenses}</div>
+            <div className="p-2 text-[#1AC29F] text-md">Total Group Expense <span className="font-bold">${calculateTotalExpense()}</span> </div>
+        </>}
     </div>)
 }
 export default GroupPage;

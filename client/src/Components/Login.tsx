@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import UserContext from "../Context/UserContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 import toast from 'react-hot-toast';
+import { ThreeDots } from 'react-loader-spinner';
 
 function Login() {
     const [EnteredUser, setEnteredUser] = useState<string>('');
@@ -15,14 +16,14 @@ function Login() {
     if (!context) {
         throw new Error("User is undefined rn");
     }
-    const { setUser } = context;
+    const { user, setUser, loading } = context;
 
     const navigate = useNavigate();
     const [loginLoader, setLoginLoader] = useState(false);
 
-    // useEffect(() => {
-    //     if (user) navigate('/home');
-    // }, [user])
+    useEffect(() => {
+        if (user) navigate('/home');
+    }, [user])
 
     async function handleLogin() {
         const toastId = toast.loading('logging..');
@@ -58,7 +59,21 @@ function Login() {
 
     return (
         <div className="flex justify-center items-center">
-            <div className='mt-[12%] w-[400px]'>
+
+            {loading && <div className="mt-20">
+                <ThreeDots
+                    visible={true}
+                    height="80"
+                    width="80"
+                    color="#5BC4A5"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                />
+            </div>}
+
+            {!loading && <div className='mt-[12%] w-[400px]'>
                 <form className='p-[2rem] rounded-[5px] flex gap-[1rem] flex-col' onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
                     <div className='flex items-center gap-2 pl-2'> <p className='text-[35px] font-bold'>Sign in to <span className='text-[#5BC4A6] italic'>SplitEqual </span></p></div>
                     <input placeholder="Enter Username" onChange={(e) => { setEnteredUser(e.target.value) }} className='p-[0.6rem] outline-none w-full bg-inherit border-[1.7px] border-[#333639] focus:border-[#5BC4A6] placeholder:text-[#71767A]' required></input>
@@ -73,7 +88,7 @@ function Login() {
                             data-testid="loader"
                         /> : 'login'}</button>
                 </form>
-            </div>
+            </div>}
         </div>);
 }
 export default Login;
