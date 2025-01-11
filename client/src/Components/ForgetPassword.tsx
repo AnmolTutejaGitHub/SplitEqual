@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import toast from 'react-hot-toast';
+
+type AxiosErrorType = {
+    response?: {
+        data?: {
+            message?: string;
+            error?: string;
+        };
+    };
+};
 
 function ForgetPassword() {
     const [enteredOTP, setEnteredOTP] = useState('');
@@ -74,18 +83,13 @@ function ForgetPassword() {
             setPassword('');
             setTimeout(() => navigate('/login'), 2000);
         } catch (error: any) {
-            console.log(error);
-
-            if (error instanceof AxiosError) {
-                if (error.response?.data?.message) {
-                    toast.error(error.response.data.message);
-                } else if (error.response?.data?.error) {
-                    toast.error(error.response.data.error);
-                } else {
-                    toast.error('Error resetting password');
-                }
+            const axiosError = error as AxiosErrorType;
+            if (axiosError.response?.data?.message) {
+                toast.error(axiosError.response.data.message);
+            } else if (axiosError.response?.data?.error) {
+                toast.error(axiosError.response.data.error);
             } else {
-                toast.error('An unexpected error occurred');
+                toast.error('Error resetting password');
             }
         } finally {
             toast.dismiss(toastid);

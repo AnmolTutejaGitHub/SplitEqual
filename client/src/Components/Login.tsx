@@ -2,10 +2,18 @@ import { useContext } from "react";
 import UserContext from "../Context/UserContext";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 import toast from 'react-hot-toast';
 import { ThreeDots } from 'react-loader-spinner';
+
+type AxiosErrorType = {
+    response?: {
+        data?: {
+            error?: string
+        }
+    }
+};
 
 function Login() {
     const [EnteredUser, setEnteredUser] = useState<string>('');
@@ -45,8 +53,9 @@ function Login() {
                 toast.success('Login Successfull');
             }
         } catch (error: any) {
-            if (error instanceof AxiosError) {
-                toast.error(error.response?.data?.error || "Some error Occurred");
+            const axiosError = error as AxiosErrorType;
+            if (axiosError.response?.data?.error) {
+                toast.error(axiosError.response.data.error);
             } else {
                 toast.error("Some error Occurred");
             }
